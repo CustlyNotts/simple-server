@@ -1,0 +1,42 @@
+name: Build and Push Docker Image to Docker Hub
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - main
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: docker.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-dev:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(date +%Y%m%d%H%M%S)"
+      - name: Build the Docker image for dev branch
+        run: |
+          timestamp=$(echo ${{ steps.timestamp.outputs.timestamp }})
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev-${timestamp} .
+  build-main:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(date +%Y%m%d%H%M%S)"
+      - name: Build the Docker image for main branch
+        run: |
+          timestamp=$(echo ${{ steps.timestamp.outputs.timestamp }})
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${timestamp} .
+
