@@ -17,5 +17,7 @@ COPY ./ .
 # Expose the port
 EXPOSE 3030
 
+EXPOSE 3031
+
 # Run app to instantiate image
 CMD ["npm", "start"]
