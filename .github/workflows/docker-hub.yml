@@ -52,7 +52,7 @@ jobs:
 
       - name: Generate random tag
         id: random_tag
-        run: echo "::set-output name=tag::dev-$(echo $((1000 + RANDOM % 9000)))"
+        run: echo "::set-output name=tag::-$(echo $((1000 + RANDOM % 9000)))"
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v2
