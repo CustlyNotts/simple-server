@@ -1,0 +1,20 @@
+# Use the Node.js version 18.20.0 as the base image
+FROM node:18.20.0
+
+# Set the working directory inside the container to /app
+WORKDIR /app
+
+# Copy the package.json and yarn.lock files from the current directory on your host into the /app directory in the container
+COPY package.json yarn.lock ./
+
+# Run the 'yarn install' command inside the container to install the dependencies specified in the package.json file
+RUN yarn install
+
+# Copy all files from the current directory on your host into the /app directory in the container
+COPY . .
+
+# Specify the default command to run when a container is started from the image
+CMD ["yarn", "dev"]
+
+# Expose port 8085 from the container to the host
+EXPOSE 8085
